@@ -4,7 +4,8 @@ import re
 class WebScraper:
     regexExp = {
         "urlRegex": r'\bhttps:\/\/\w+?\.wikipedia\.org\/wiki\/\S+\b',
-        "titleRegex": r'<\s*h1 id="firstHeading" class="firstHeading"\s*>\n*\t*(\w+)'
+        "titleRegex": r'<\s*h1 id="firstHeading" class="firstHeading"\s*>\n*\t*(.+)',
+        "topicsRegex": r'<\s*span class="toctext"\s*>\n*\t*(.+)\n*\t*<\s*/span\s*>'
     }
 
     def __init__(self, link) -> None:
@@ -17,3 +18,6 @@ class WebScraper:
     def getTitle(self) -> str:
         # retorna o grupo de captura contido no match
         return re.findall(self.regexExp["titleRegex"], self.htmlContent)[0]
+
+    def getTopics(self) -> list:
+        return re.findall(self.regexExp["topicsRegex"], self.htmlContent)
