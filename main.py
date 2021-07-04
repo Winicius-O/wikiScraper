@@ -1,6 +1,6 @@
 from WebScraper import WebScraper
 
-link = "https://pt.wikipedia.org/wiki/Autômato"
+link = "oi"
 x = WebScraper(link)
 
 with open('pretty.html', 'w', encoding='UTF-8') as f:
@@ -8,5 +8,3 @@ with open('pretty.html', 'w', encoding='UTF-8') as f:
 
 # print(x.getTitle())
 # print(x.getTopics())
-for i in x.getImageDesc():
-    print(i+"\n")
