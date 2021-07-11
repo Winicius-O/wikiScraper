@@ -61,25 +61,35 @@ def listarArtigos(webScraper: WebScraper):
     print("")
 
 def salvarArquivo(webScraper: WebScraper):
-    pass
+    webScraper.jsonGen()
+    print("\t o arquivo foi salvo na pasta local")
 
-
-print("WebScraper")
+    
 
 isValido = False
 while not isValido:
-    # userInput = input("insira o link da pagina Wikipedia: ")
+    userInput = input("insira o link da pagina Wikipedia: ")
 
     try:
-        # webScraper = WebScraper(userInput)
+        webScraper = WebScraper(userInput)
         # webScraper = WebScraper('https://pt.wikipedia.org/wiki/brasil')
-        webScraper = WebScraper('https://pt.wikipedia.org/wiki/Samba-exalta%C3%A7%C3%A3o')
+        # webScraper = WebScraper('https://pt.wikipedia.org/wiki/Samba-exalta%C3%A7%C3%A3o')
         isValido = True
     except:
         print("o link inserido é inválido, tente novamente.")
 
-
-print('Bem vindo!')
+msg = """
+oooooo   oooooo     oooo  o8o  oooo         o8o 
+ `888.    `888.     .8'   `"'  `888         `"' 
+  `888.   .8888.   .8'   oooo   888  oooo  oooo 
+   `888  .8'`888. .8'    `888   888 .8P'   `888 
+    `888.8'  `888.8'      888   888888.     888 
+     `888'    `888'       888   888 `88b.   888 
+      `8'      `8'       o888o o888o o888o o888o
+                                                
+                                                
+                                                """
+print(msg)
 menu()
 
 userInput = -1

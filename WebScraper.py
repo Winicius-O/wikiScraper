@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import json
+import os
 
 class WebScraper:
     regexExp = {
@@ -24,7 +26,10 @@ class WebScraper:
 
     def getTitle(self) -> str:
         # retorna o grupo de captura contido no match
-        return re.findall(self.regexExp["titleRegex"], self.htmlContent)[0]
+        try:
+            return re.findall(self.regexExp["titleRegex"], self.htmlContent)[0]
+        except:
+            return None
 
     def getTopics(self) -> list:
         content = re.findall(self.regexExp["topicsRegex"], self.htmlContent)
@@ -52,10 +57,35 @@ class WebScraper:
             return None
 
     def getArticles(self) -> list:
-        newBody = self.soup.find_all('div', {'class': 'mw-parser-output'})[0].prettify()
+        newBody = self.soup.find_all('div', {'class': 'mw-parser-output'})
+        if len(newBody) == 0:
+            return None
+        else:
+            newBody = newBody[0].prettify()
+
         content = re.findall(self.regexExp["articlesRegex"], newBody)
 
         if len(content)!=0:
             return content
         else:
             return None
+
+    def jsonGen(self) -> None:
+        temp = {}
+        temp["url"] = self.url
+        temp["titulo"] = self.getTitle()
+        temp["topicos"] = self.getTopics()
+        temp["imagens"] = self.getImageDesc()
+
+        artigos = self.getArticles()
+        if artigos != None:
+            artigos = list(map(lambda x: [self.url+x[0], x[1]], artigos))
+
+        temp["artigos"] = artigos
+
+        folderPATH = ".\\arquivosJSON\\"
+        if not os.path.exists(folderPATH):
+            os.makedirs(folderPATH)
+
+        with open(f'{folderPATH}{self.getTitle()}.json', 'w', encoding='UTF-8') as f:
+            json.dump(temp, f, indent=4, ensure_ascii=False)
