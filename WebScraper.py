@@ -109,13 +109,13 @@ class WebScraper:
         temp["titulo"] = self.getTitle()
         temp["topicos"] = self.getTopics()
         temp["imagens"] = self.getImageDesc()
-        temp["referencias"] = self.getBio()
 
         artigos = self.getArticles()
         if artigos != None:
             artigos = list(map(lambda x: [self.url[0]+x[0], x[1]], artigos))
 
         temp["artigos"] = artigos
+        temp["referencias"] = self.getBio()
 
         folderPATH = ".\\arquivosJSON\\"
         if not os.path.exists(folderPATH):
