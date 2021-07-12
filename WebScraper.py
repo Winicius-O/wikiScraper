@@ -66,12 +66,22 @@ class WebScraper:
         # content = re.findall(self.regexExp["bioRegex"], newBody)
 
         temp = []
+        formataLista = []
         for i in newBody:
+            formataLista = []
+
+            links = i.find_all('a', {'class': 'external text'})
+            separaLinks = lambda x: re.findall(r'<.*\shref="(.*)"\s.*>', str(x))[0]
+            links = list(map(separaLinks, links))
+
             #removendo tags html dos elementos achados
             filtragem = re.sub(self.regexExp["tagRemoverRegex"], "", i.prettify())
             #limpando identação restante
             filtragem = re.sub("\n\s*", " ", filtragem)
-            temp.append(filtragem)
+            
+            formataLista.append(filtragem)
+            formataLista.append(links)
+            temp.append(formataLista.copy())
 
         if len(temp)!=0:
             return temp
@@ -99,6 +109,7 @@ class WebScraper:
         temp["titulo"] = self.getTitle()
         temp["topicos"] = self.getTopics()
         temp["imagens"] = self.getImageDesc()
+        temp["referencias"] = self.getBio()
 
         artigos = self.getArticles()
         if artigos != None:

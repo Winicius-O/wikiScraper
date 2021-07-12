@@ -51,7 +51,11 @@ def listarBibliografia(webScraper: WebScraper):
         return
 
     for i in range(len(content)):
-        print(f'\t{i+1}) {content[i]}')
+        print(f'\t{i+1}) {content[i][0]}')
+        for link in content[i][1]:
+            print(f'\t\t{link}')
+
+        print("")
 
     print("")
     
