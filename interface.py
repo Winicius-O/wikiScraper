@@ -123,7 +123,6 @@ while userInput != 0:
     elif userInput == '2':
         listarDescricoesImg(webScraper)
     elif userInput == '3':
-        print(webScraper.getBio())
         listarBibliografia(webScraper)
     elif userInput == '4':
         listarArtigos(webScraper)

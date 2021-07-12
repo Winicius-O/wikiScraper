@@ -59,23 +59,21 @@ class WebScraper:
             return None
 
     def getBio(self) -> list:
-        newBody = self.soup.find_all('ol', {'class': 'references'})
+        newBody = self.soup.find_all('span', {'class': 'reference-text'})
         if len(newBody) == 0:
             return None
-        else:
-            newBody = newBody[0].prettify()
         
-        content = re.findall(self.regexExp["bioRegex"], newBody)
+        # content = re.findall(self.regexExp["bioRegex"], newBody)
 
         temp = []
-        for i in content:
+        for i in newBody:
             #removendo tags html dos elementos achados
-            filtragem = re.sub(self.regexExp["tagRemoverRegex"], "", i)
+            filtragem = re.sub(self.regexExp["tagRemoverRegex"], "", i.prettify())
             #limpando identação restante
             filtragem = re.sub("\n\s*", " ", filtragem)
             temp.append(filtragem)
 
-        if len(content)!=0:
+        if len(temp)!=0:
             return temp
         else:
             return None
