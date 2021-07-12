@@ -1,3 +1,4 @@
+from warnings import filterwarnings
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -6,11 +7,12 @@ import os
 
 class WebScraper:
     regexExp = {
-        "urlRegex": r'(https:\/\/\w+?\.wikipedia\.org)\/wiki\/\S+',
+        "urlRegex": r'(https:\/\/\w+?\.wikipedia\.org)(\/wiki\/\S+)',
         "tagRemoverRegex": r'<.*>',
         "titleRegex": r'<h1 class="firstHeading" id="firstHeading">[\n\s]*(.+)[\n\s]*</h1>',
         "topicsRegex": r'<span class="toctext">[\n\s]*(.+)[\n\s]*<\/span>',
         "imgRegex": r'<div class="thumbcaption">\s*<div class="magnify">\s*<a.*>\s*<\/a>\s*<\/div>(?:(?!<\/div>)[\s\S])*',
+        "bioRegex": r'<span\sclass="reference-text">\s*<cite.*>(?:(?!<\/cite>)[\s\S])*',
         "articlesRegex": r'<a .*href="(\/wiki\/.*)".*title="(.*)".*>[\n\s]*.*[\n\s]*<\/a>'
     }
 
@@ -56,6 +58,29 @@ class WebScraper:
         else:
             return None
 
+    def getBio(self) -> list:
+        newBody = self.soup.find_all('ol', {'class': 'references'})
+        if len(newBody) == 0:
+            return None
+        else:
+            newBody = newBody[0].prettify()
+        
+        content = re.findall(self.regexExp["bioRegex"], newBody)
+
+        temp = []
+        for i in content:
+            #removendo tags html dos elementos achados
+            filtragem = re.sub(self.regexExp["tagRemoverRegex"], "", i)
+            #limpando identação restante
+            filtragem = re.sub("\n\s*", " ", filtragem)
+            temp.append(filtragem)
+
+        if len(content)!=0:
+            return temp
+        else:
+            return None
+
+
     def getArticles(self) -> list:
         newBody = self.soup.find_all('div', {'class': 'mw-parser-output'})
         if len(newBody) == 0:
@@ -72,14 +97,14 @@ class WebScraper:
 
     def jsonGen(self) -> None:
         temp = {}
-        temp["url"] = self.url
+        temp["url"] = self.url[0] + self.url[1]
         temp["titulo"] = self.getTitle()
         temp["topicos"] = self.getTopics()
         temp["imagens"] = self.getImageDesc()
 
         artigos = self.getArticles()
         if artigos != None:
-            artigos = list(map(lambda x: [self.url+x[0], x[1]], artigos))
+            artigos = list(map(lambda x: [self.url[0]+x[0], x[1]], artigos))
 
         temp["artigos"] = artigos
 

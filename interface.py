@@ -22,8 +22,8 @@ def listarTopicos(webScraper: WebScraper):
         print("")
         return
 
-    for i in content:
-        print("\t"+i)
+    for i in range(len(content)):
+        print(f'\t{i+1}) {content[i]}')
         
     print("")
 
@@ -33,18 +33,28 @@ def listarDescricoesImg(webScraper: WebScraper):
     print("\nDescrições das imagens:")
     if content == None:
         print("\tNão há imagens nessa página")
-        print("\n")
+        print("")
         return
 
-    for i in content:
-        print("\t"+i)
+    for i in range(len(content)):
+        print(f'\t{i+1}) {content[i]}')
         
     print("")
 
 def listarBibliografia(webScraper: WebScraper):
+    content = webScraper.getBio()
+
     print("\nReferências bibliográficas:")
-    print("\tEssa função não foi implementada ainda")
+    if content == None:
+        print("\tNão há referências bibliográficas nessa página")
+        print("")
+        return
+
+    for i in range(len(content)):
+        print(f'\t{i+1}) {content[i]}')
+
     print("")
+    
 
 def listarArtigos(webScraper: WebScraper):
     content = webScraper.getArticles()
@@ -56,27 +66,20 @@ def listarArtigos(webScraper: WebScraper):
         return
 
     for i in range(len(content)):
-        print(f'\t{i}) {content[i][1]} -> {webScraper.url}{content[i][0]}')
+        print(f'\t{i+1}) {content[i][1]} -> {webScraper.url[0]}{content[i][0]}')
         
     print("")
 
 def salvarArquivo(webScraper: WebScraper):
     webScraper.jsonGen()
+    print("")
     print("\t o arquivo foi salvo na pasta local")
+    print("")
 
-    
 
-isValido = False
-while not isValido:
-    userInput = input("insira o link da pagina Wikipedia: ")
 
-    try:
-        webScraper = WebScraper(userInput)
-        # webScraper = WebScraper('https://pt.wikipedia.org/wiki/brasil')
-        # webScraper = WebScraper('https://pt.wikipedia.org/wiki/Samba-exalta%C3%A7%C3%A3o')
-        isValido = True
-    except:
-        print("o link inserido é inválido, tente novamente.")
+#MAIN 
+
 
 msg = """
 oooooo   oooooo     oooo  o8o  oooo         o8o 
@@ -90,6 +93,20 @@ oooooo   oooooo     oooo  o8o  oooo         o8o
                                                 
                                                 """
 print(msg)
+
+isValido = False
+while not isValido:
+    userInput = input("insira o link da pagina Wikipedia: ")
+
+    try:
+        webScraper = WebScraper(userInput)
+        # webScraper = WebScraper('https://pt.wikipedia.org/wiki/brasil')
+        # webScraper = WebScraper('https://pt.wikipedia.org/wiki/Samba-exalta%C3%A7%C3%A3o')
+        isValido = True
+    except:
+        print("o link inserido é inválido, tente novamente.")
+
+print(f'\n\t{webScraper.getTitle()}\n')
 menu()
 
 userInput = -1
@@ -106,6 +123,7 @@ while userInput != 0:
     elif userInput == '2':
         listarDescricoesImg(webScraper)
     elif userInput == '3':
+        print(webScraper.getBio())
         listarBibliografia(webScraper)
     elif userInput == '4':
         listarArtigos(webScraper)
