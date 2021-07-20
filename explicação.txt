@@ -1,0 +1,89 @@
+"urlRegex":
+r'(https:\/\/\w+?\.wikipedia\.org)(\/wiki\/\S+)'
+
+consiste em:
+    grupo de captura 1:
+        string que começa com https:// -> https:\/\/
+        seguido da presença ou não de uma palavra -> \w+?
+        seguido de .wikipedia.org -> \.wikipedia\.org
+    grupo de captura 2:
+        string /wiki/ -> \/wiki\/
+        seguido de qualquer caractere que não é espaço ou nova linha -> \S+
+
+
+"tagRemoverRegex":
+r'<.*>'
+
+consiste em:
+    string que começa com "<", possui qualquer conteudo dentro dela (exceto nova linha), e termina com ">"
+
+
+"separaLinkRegex":
+r'<.*\shref="(.*)"\s.*>'
+
+consiste em:
+    igual a anterior, mas espera que haja um href dentro da tag, nesse caso ela captura todo conteudo dentro das aspas
+
+
+"titleRegex":
+r'<h1 class="firstHeading" id="firstHeading">[\n\s]*(.+)[\n\s]*</h1>'
+
+consistem em:
+    string que começa com exatamente <h1 class="firstHeading" id="firstHeading">
+    apos isso, pode haver uma quantidade indeterminada de espaços e nova linha -> [\n\s]*
+    grupo de captura 1:
+        qualquer conteudo, pelo menos 1 caractere -> (.+)
+    quantidade indeterminada de espaços e nova linha -> [\n\s]*
+    encerra com o fechamento de tag </h1>
+
+
+"topicsRegex":
+r'<span class="toctext">[\n\s]*(.+)[\n\s]*<\/span>'
+
+consiste em:
+    string que começa exatamente com <span class="toctext">
+    quantidade indeterminada de espaços e nova linha -> [\n\s]*
+    grupo de captura 1:
+        qualquer conteudo, pelo menos 1 caractere -> (.+)
+    quantidade indeterminada de espaços e nova linha -> [\n\s]*
+    encerra com o fechamento de tag <\/span>
+
+
+"imgRegex":
+r'<div class="thumbcaption">\s*<div class="magnify">\s*<a.*>\s*<\/a>\s*<\/div>(?:(?!<\/div>)[\s\S])*'
+
+consiste em:
+    string que começa exatamente com <div class="thumbcaption">
+    quantidade indeterminada de espaços e nova linha -> \s* - obs. só depois de ter feito os anteriores descobri que podia ser feito assim
+    seguido por string exata <div class="magnify">
+    quantidade indeterminada de espaços e nova linha -> \s*
+    seguido por string que representa a tag <a>, em que é desprezado todo conteudo que ela possa ter -> <a.*>
+    quantidade indeterminada de espaços e nova linha -> \s*
+    seguido por fechamento da tag a -> <\/a>
+    quantidade indeterminada de espaços e nova linha -> \s*
+    seguido por fechamento da div mais interna -> <\/div>
+    grupo de não captura:
+        qualquer conteudo, (incluindo nova linha) -> [\s\S]
+        que não seja antecedido por </div> -> (?!<\/div>)
+        multiplas ocorrências -> *
+
+
+"bioRegex":
+r'<span\sclass="reference-text">\s*<cite.*>(?:(?!<\/cite>)[\s\S])*'
+
+esse não está sendo utilizado
+
+
+"articlesRegex":
+r'<a .*href="(\/wiki\/.*)".*title="(.*)".*>[\n\s]*.*[\n\s]*<\/a>'
+
+consistem em:
+    toda tag a, que possui dentro de sua tag href e title -> <a .*href="(\/wiki\/.*)".*title="(.*)".*>
+    grupo de captura 1:
+        captura todo conteudo dentro da href, desde que ele comece com /wiki/ -> (\/wiki\/.*)
+    grupo de captura 2:
+        captrura todo conteudo dentro de title -> (.*)
+    quantidade indeterminada de espaços e nova linha -> [\n\s]*
+    qualquer possivel conteudo exceto por nova linha -> .*
+    quantidade indeterminada de espaços e nova linha -> [\n\s]*
+    seguido por fechamento da a -> <\/a>

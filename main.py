@@ -28,7 +28,7 @@ def listarTopicos(webScraper: WebScraper):
     print("")
 
 def listarDescricoesImg(webScraper: WebScraper):
-    content = webScraper.getImageDesc()
+    content = webScraper.getImage()
 
     print("\nDescrições das imagens:")
     if content == None:
@@ -37,7 +37,7 @@ def listarDescricoesImg(webScraper: WebScraper):
         return
 
     for i in range(len(content)):
-        print(f'\t{i+1}) {content[i]}')
+        print(f'\t{i+1}) {content[i][0]}\n\t{content[i][1].split("Ficheiro:")[1]}:\n\t{webScraper.url[0]+content[i][1]}\n')
         
     print("")
 
